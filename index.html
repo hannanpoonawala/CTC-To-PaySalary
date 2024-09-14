@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css" />
+    <title>CTC-to-PS</title>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>CTC to Basic Pay Calculator</h1>
+      </header>
+      <main>
+        <section class="upper-box">
+          <section class="introduction">
+            <div class="about">
+              <h2>About Us</h2>
+              <p>
+                Welcome to the CTC-to-Basic Pay Calculator! We specialize in
+                helping individuals and organizations better understand how
+                salary structures work, making it easy to calculate Basic Pay,
+                House Rent Allowance (HRA), Special Allowance, and Deductions
+                from the total Cost to Company (CTC).
+              </p>
+              <p>
+                Our mission is to provide a user-friendly and accurate tool to
+                break down CTC components so that employees can clearly see
+                their payable salary. Whether you're in India, the USA, or
+                elsewhere, our calculator adjusts to your region's salary
+                structure.
+              </p>
+              <p>
+                Our platform is perfect for professionals, HR departments, and
+                financial enthusiasts seeking clarity in salary breakdowns. We
+                aim to simplify complex salary terms and ensure you understand
+                what your CTC translates to in terms of real earnings.
+              </p>
+              <p>
+                Start using our tool today to see how much of your CTC turns
+                into Basic Pay!
+              </p>
+            </div>
+          </section>
+
+          <section class="main">
+            <form class="calculator-form">
+              <div class="form-group">
+                <label for="CTC">Enter CTC:</label>
+                <input
+                  type="number"
+                  name="Enter CTC"
+                  id="CTC"
+                  placeholder="Enter CTC"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="RegIn">Currency:</label>
+                <select name="Region" id="RegIn">
+                  <option value="India">Rupee (&#8377;)</option>
+                  <option value="USA">Dollar ($)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="Region">Region:</label>
+                <select name="Region" id="Region">
+                  <option value="India">India</option>
+                  <option value="USA">USA</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <button type="button" onclick="Calcu()">Calculate</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="chatai">
+            <div class="futureUpdate">
+              <p>Future Updates:</p>
+            </div>
+          </section>
+        </section>
+
+        <section class="lower-box">
+          <!-- Table to display results -->
+          <div id="results-container" class="results-container">
+            <table id="results-table" class="results-table">
+              <!-- Table headers -->
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Yearly Amount</th>
+                  <th>Monthly Amount</th>
+                </tr>
+              </thead>
+              <!-- Table body will be filled dynamically -->
+              <tbody id="results-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

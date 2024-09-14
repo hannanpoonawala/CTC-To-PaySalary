@@ -1,0 +1,199 @@
+/* General Styles */
+body {
+  font-family: "Arial", sans-serif;
+  background-color: white;
+  color: black;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+  margin: 0;
+  color: navy;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background-color: black;
+  color: white;
+}
+
+body.dark-mode button {
+  background-color: lightgray;
+  color: black;
+}
+
+body.dark-mode .results-table th {
+  background-color: darkslategray;
+}
+
+body.dark-mode .results-table td.positive {
+  color: lime;
+}
+
+body.dark-mode .results-table td.negative {
+  color: tomato;
+}
+
+/* Upper Box Styles */
+.upper-box {
+  display: flex;
+  justify-content: space-between;
+  background-color: whitesmoke;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+.introduction,
+.main,
+.chatai {
+  flex: 1;
+  margin: 10px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s;
+}
+
+.introduction p,
+.chatai p {
+  color: dimgray;
+  font-size: 1rem;
+}
+
+/* Form Styles */
+form {
+  padding: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: navy;
+}
+
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  background-color: white;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: dodgerblue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: steelblue;
+}
+
+/* Dark Mode Toggle Button */
+#dark-mode-toggle {
+  margin-top: 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+#dark-mode-toggle:hover {
+  background-color: gray;
+}
+
+/* Table Styling */
+.results-table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  font-size: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s;
+}
+
+.results-table th,
+.results-table td {
+  padding: 15px;
+  text-align: center;
+  border: 1px solid lightgray;
+}
+
+.results-table th {
+  background-color: darkblue;
+  color: white;
+}
+
+.results-table td {
+  text-align: right;
+}
+
+.results-table td:first-child {
+  text-align: left;
+}
+
+.results-table td.positive {
+  color: green;
+}
+
+.results-table td.negative {
+  color: red;
+}
+
+.results-table tr:nth-child(even) {
+  background-color: whitesmoke;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .upper-box {
+    flex-direction: column;
+  }
+
+  .introduction,
+  .main,
+  .chatai {
+    margin: 10px 0;
+  }
+
+  button {
+    font-size: 1rem;
+  }
+
+  .results-table th,
+  .results-table td {
+    padding: 10px;
+  }
+}
