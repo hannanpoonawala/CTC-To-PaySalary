@@ -1,104 +1,114 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-    <title>CTC-to-PS</title>
-  </head>
-  <body>
-    <div class="container">
-      <header>
-        <h1>CTC to Basic Pay Calculator</h1>
-      </header>
-      <main>
-        <section class="upper-box">
-          <section class="introduction">
-            <div class="about">
-              <h2>About Us</h2>
-              <p>
-                Welcome to the CTC-to-Basic Pay Calculator! We specialize in
-                helping individuals and organizations better understand how
-                salary structures work, making it easy to calculate Basic Pay,
-                House Rent Allowance (HRA), Special Allowance, and Deductions
-                from the total Cost to Company (CTC).
-              </p>
-              <p>
-                Our mission is to provide a user-friendly and accurate tool to
-                break down CTC components so that employees can clearly see
-                their payable salary. Whether you're in India, the USA, or
-                elsewhere, our calculator adjusts to your region's salary
-                structure.
-              </p>
-              <p>
-                Our platform is perfect for professionals, HR departments, and
-                financial enthusiasts seeking clarity in salary breakdowns. We
-                aim to simplify complex salary terms and ensure you understand
-                what your CTC translates to in terms of real earnings.
-              </p>
-              <p>
-                Start using our tool today to see how much of your CTC turns
-                into Basic Pay!
-              </p>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTC Salary Calculator Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="header-content">
+            <div>
+                <h1>💰 CTC Salary Calculator Pro</h1>
+                <p>Complete salary analysis with tax, comparison & recommendations</p>
             </div>
-          </section>
-
-          <section class="main">
-            <form class="calculator-form">
-              <div class="form-group">
-                <label for="CTC">Enter CTC:</label>
-                <input
-                  type="number"
-                  name="Enter CTC"
-                  id="CTC"
-                  placeholder="Enter CTC"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="RegIn">Currency:</label>
-                <select name="Region" id="RegIn">
-                  <option value="India">Rupee (&#8377;)</option>
-                  <option value="USA">Dollar ($)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="Region">Region:</label>
-                <select name="Region" id="Region">
-                  <option value="India">India</option>
-                  <option value="USA">USA</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <button type="button" onclick="Calcu()">Calculate</button>
-              </div>
-            </form>
-          </section>
-
-          <section class="chatai">
-            <div class="futureUpdate">
-              <p>Future Updates:</p>
+            <div class="action-buttons">
+                <button class="btn" onclick="saveComparison()">💾 Save for Comparison</button>
+                <button class="btn" onclick="window.print()">📄 Export PDF</button>
+                <button class="btn btn-primary" onclick="showRecommendations()">💡 Smart Tips</button>
             </div>
-          </section>
-        </section>
-
-        <section class="lower-box">
-          <!-- Table to display results -->
-          <div id="results-container" class="results-container">
-            <table id="results-table" class="results-table">
-              <!-- Table headers -->
-              <thead>
-                <tr>
-                  <th>Parameter</th>
-                  <th>Yearly Amount</th>
-                  <th>Monthly Amount</th>
-                </tr>
-              </thead>
-              <!-- Table body will be filled dynamically -->
-              <tbody id="results-body"></tbody>
-            </table>
-          </div>
-        </section>
-      </main>
+        </div>
     </div>
-    <script src="script.js"></script>
-  </body>
+
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab(event,'calculator')">🧮 Calculator</div>
+        <div class="tab" onclick="switchTab(event,'tax')">📊 Tax Analysis</div>
+        <div class="tab" onclick="switchTab(event,'comparison')">⚖️ Compare Offers</div>
+        <div class="tab" onclick="switchTab(event,'city')">🏙️ City Comparison</div>
+    </div>
+
+    <!-- Calculator -->
+    <div class="tab-content active" id="calculator-tab">
+        <div class="content">
+            <div class="input-section">
+                <h2>📝 Input Details</h2>
+
+                <div class="input-group">
+                    <label>Currency</label>
+                    <select id="currency" onchange="updateCurrency()">
+                        <option value="INR">INR</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Offer Name</label>
+                    <input type="text" id="offer-name" placeholder="Company / Role">
+                </div>
+
+                <div class="input-group">
+                    <label>Annual CTC</label>
+                    <input type="number" id="ctc">
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Basic %</label>
+                        <input type="number" id="basic-percent" value="40">
+                    </div>
+                    <div class="input-group">
+                        <label>HRA % of Basic</label>
+                        <input type="number" id="hra-percent" value="50">
+                    </div>
+                </div>
+
+                <button class="calculate-btn" onclick="calculateSalary()">Calculate</button>
+            </div>
+
+            <div class="output-section">
+                <h2>📊 Salary Breakdown</h2>
+                <div id="output-content" class="empty-state">
+                    Enter details and calculate
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tax -->
+    <div class="tab-content" id="tax-tab">
+        <div class="input-section">
+            <h2>📊 Income Tax</h2>
+            <button class="calculate-btn" onclick="calculateTax()">Calculate Tax</button>
+            <div id="tax-output"></div>
+        </div>
+    </div>
+
+    <!-- Comparison -->
+    <div class="tab-content" id="comparison-tab">
+        <div id="comparison-content" class="comparison-grid"></div>
+    </div>
+
+    <!-- City -->
+    <div class="tab-content" id="city-tab">
+        <button class="calculate-btn" onclick="compareCities()">Compare Cities</button>
+        <div id="city-output"></div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="recommendations-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>💡 Recommendations</h2>
+        <div id="recommendations-content"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
 </html>

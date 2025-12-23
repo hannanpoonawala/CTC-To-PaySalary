@@ -1,116 +1,143 @@
-function formatNumber(num, currency) {
-  if (currency === "India") {
-    // Format number with commas for Indian currency
-    return new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 }).format(
-      num
-    );
-  } else {
-    // Format number with commas for Dollar currency
-    return new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(
-      num
-    );
-  }
+let currentCurrency = 'INR';
+let currentData = null;
+let savedOffers = [];
+
+const currencySymbols = {
+    INR: '₹', USD: '$', EUR: '€', GBP: '£'
+};
+
+const cityData = {
+    Mumbai: 100,
+    Bangalore: 90,
+    Delhi: 95,
+    Hyderabad: 75,
+    Pune: 80
+};
+
+/* Tabs */
+function switchTab(event, name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(name + '-tab').classList.add('active');
 }
 
-function Calcu() {
-  // Get the input values
-  const ctc = parseFloat(document.getElementById("CTC").value);
-  const region = document.getElementById("Region").value;
-  const currency = document.getElementById("RegIn").value;
+/* Currency */
+function updateCurrency() {
+    currentCurrency = document.getElementById('currency').value;
+}
 
-  // Validate the input
-  if (isNaN(ctc) || ctc <= 0) {
-    alert("Please enter a valid CTC amount.");
-    return;
-  }
+/* Salary Calculation */
+function calculateSalary() {
+    const ctc = +document.getElementById('ctc').value;
+    const basicPct = +document.getElementById('basic-percent').value;
+    const hraPct = +document.getElementById('hra-percent').value;
 
-  // Perform region-specific calculations
-  let basicSalary, hra, specialAllowance, deductions, netPayableSalary;
+    if (!ctc) return alert("Enter CTC");
 
-  if (region === "India") {
-    basicSalary = ctc * 0.4;
-    hra = basicSalary * 0.5;
-    specialAllowance = ctc - (basicSalary + hra);
-    deductions = basicSalary * 0.12 + 2500;
-  } else if (region === "USA") {
-    basicSalary = ctc * 0.5;
-    hra = 0;
-    specialAllowance = ctc - basicSalary;
-    deductions = basicSalary * 0.062 + basicSalary * 0.0145; // Social security and Medicare in USA
-  }
+    const basic = ctc * basicPct / 100;
+    const hra = basic * hraPct / 100;
+    const gross = basic + hra;
+    const monthly = gross / 12;
 
-  // Calculate net payable salary
-  netPayableSalary = ctc - deductions;
+    currentData = { ctc, basic, hra, gross };
 
-  // Monthly values
-  const basicSalaryMonthly = basicSalary / 12;
-  const hraMonthly = hra / 12;
-  const specialAllowanceMonthly = specialAllowance / 12;
-  const deductionsMonthly = deductions / 12;
-  const netPayableSalaryMonthly = netPayableSalary / 12;
+    document.getElementById('output-content').innerHTML = `
+        <div class="highlight-card">
+            <div class="amount">${currencySymbols[currentCurrency]}${monthly.toFixed(0)}</div>
+            <div class="period">Monthly In-hand (Approx)</div>
+        </div>
 
-  // Get the table body element where data will be inserted
-  const resultsBody = document.getElementById("results-body");
-
-  // Clear previous table data if any
-  resultsBody.innerHTML = "";
-
-  // Data to populate with detailed parameter descriptions
-  const data = [
-    {
-      parameter: "Basic Salary (40% of CTC)",
-      yearly: basicSalary,
-      monthly: basicSalaryMonthly,
-      positive: true,
-    },
-    {
-      parameter: "House Rent Allowance (HRA, 50% of Basic)",
-      yearly: hra,
-      monthly: hraMonthly,
-      positive: true,
-    },
-    {
-      parameter: "Special Allowance",
-      yearly: specialAllowance,
-      monthly: specialAllowanceMonthly,
-      positive: true,
-    },
-    {
-      parameter: "Deductions (Provident Fund, Taxes)",
-      yearly: deductions,
-      monthly: deductionsMonthly,
-      positive: false,
-    },
-    {
-      parameter: "Net Payable Salary (After Deductions)",
-      yearly: netPayableSalary,
-      monthly: netPayableSalaryMonthly,
-      positive: true,
-    },
-  ];
-
-  // Loop through the data to create rows dynamically
-  data.forEach((item) => {
-    const newRow = document.createElement("tr");
-
-    // Create and append cells to the new row
-    newRow.innerHTML = `
-      <td>${item.parameter}</td>
-      <td style="color: ${item.positive ? "green" : "red"}">${formatNumber(
-      item.yearly,
-      currency
-    )}</td>
-      <td style="color: ${item.positive ? "green" : "red"}">${formatNumber(
-      item.monthly,
-      currency
-    )}</td>
+        <div class="result-card">
+            <div class="result-item"><span>CTC</span><span>${currencySymbols[currentCurrency]}${ctc}</span></div>
+            <div class="result-item"><span>Basic</span><span>${basic.toFixed(0)}</span></div>
+            <div class="result-item"><span>HRA</span><span>${hra.toFixed(0)}</span></div>
+            <div class="result-item"><span>Gross</span><span>${gross.toFixed(0)}</span></div>
+        </div>
     `;
+}
 
-    // Append the new row to the table body
-    resultsBody.appendChild(newRow);
-  });
+/* Tax */
+function calculateTax() {
+    if (!currentData) return alert("Calculate salary first");
+    let tax = 0;
+    let income = currentData.gross;
 
-  // Make the lower box (table) visible
-  const lowerBox = document.querySelector(".lower-box");
-  lowerBox.classList.add("visible");
+    if (income > 500000) tax += (income - 500000) * 0.2;
+    if (income > 1000000) tax += (income - 1000000) * 0.1;
+
+    document.getElementById('tax-output').innerHTML = `
+        <div class="result-card">
+            <h3>Estimated Annual Tax</h3>
+            <div class="result-item">
+                <span>Tax Payable</span>
+                <span>${currencySymbols[currentCurrency]}${tax.toFixed(0)}</span>
+            </div>
+        </div>
+    `;
+}
+
+/* Save Offer */
+function saveComparison() {
+    if (!currentData) return alert("Calculate salary first");
+    savedOffers.push({
+        name: document.getElementById('offer-name').value || "Offer",
+        ctc: currentData.ctc
+    });
+    renderComparison();
+}
+
+/* Comparison */
+function renderComparison() {
+    const container = document.getElementById('comparison-content');
+    container.innerHTML = '';
+
+    savedOffers.forEach((o, i) => {
+        container.innerHTML += `
+            <div class="comparison-card">
+                <button class="delete-btn" onclick="deleteOffer(${i})">×</button>
+                <h3>${o.name}</h3>
+                <p>CTC: ${currencySymbols[currentCurrency]}${o.ctc}</p>
+            </div>
+        `;
+    });
+}
+
+function deleteOffer(i) {
+    savedOffers.splice(i, 1);
+    renderComparison();
+}
+
+/* City Comparison */
+function compareCities() {
+    if (!currentData) return alert("Calculate salary first");
+    let html = '<div class="city-comparison-grid">';
+    Object.keys(cityData).forEach(city => {
+        const adjusted = currentData.ctc * (100 / cityData[city]);
+        html += `
+            <div class="city-card">
+                <h4>${city}</h4>
+                <p>Equivalent Salary: ${currencySymbols[currentCurrency]}${adjusted.toFixed(0)}</p>
+            </div>
+        `;
+    });
+    html += '</div>';
+    document.getElementById('city-output').innerHTML = html;
+}
+
+/* Recommendations */
+function showRecommendations() {
+    if (!currentData) return alert("Calculate salary first");
+    document.getElementById('recommendations-content').innerHTML = `
+        <ul>
+            <li>Keep Basic around 40–50% for tax efficiency</li>
+            <li>Use HRA & 80C to reduce tax</li>
+            <li>Compare city cost before accepting offers</li>
+        </ul>
+    `;
+    document.getElementById('recommendations-modal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('recommendations-modal').style.display = 'none';
 }
