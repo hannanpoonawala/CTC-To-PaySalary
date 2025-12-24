@@ -7,108 +7,258 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <div class="header-content">
-            <div>
-                <h1>💰 CTC Salary Calculator Pro</h1>
-                <p>Complete salary analysis with tax, comparison & recommendations</p>
-            </div>
-            <div class="action-buttons">
-                <button class="btn" onclick="saveComparison()">💾 Save for Comparison</button>
-                <button class="btn" onclick="window.print()">📄 Export PDF</button>
-                <button class="btn btn-primary" onclick="showRecommendations()">💡 Smart Tips</button>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div>
+                    <h1>💰 CTC Salary Calculator Pro</h1>
+                    <p>Complete salary analysis with tax, comparison & recommendations</p>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn" onclick="saveComparison()">💾 Save for Comparison</button>
+                    <button class="btn" onclick="exportToPDF()">📄 Export PDF</button>
+                    <button class="btn btn-primary" onclick="showRecommendations()">💡 Smart Tips</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="tabs">
-        <div class="tab active" onclick="switchTab(event,'calculator')">🧮 Calculator</div>
-        <div class="tab" onclick="switchTab(event,'tax')">📊 Tax Analysis</div>
-        <div class="tab" onclick="switchTab(event,'comparison')">⚖️ Compare Offers</div>
-        <div class="tab" onclick="switchTab(event,'city')">🏙️ City Comparison</div>
-    </div>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('calculator')">🧮 Calculator</div>
+            <div class="tab" onclick="switchTab('payslip')">📄 PaySlip View</div>
+            <div class="tab" onclick="switchTab('tax')">📊 Tax Analysis</div>
+            <div class="tab" onclick="switchTab('comparison')">⚖️ Compare Offers</div>
+            <div class="tab" onclick="switchTab('city')">🏙️ City Comparison</div>
+        </div>
 
-    <!-- Calculator -->
-    <div class="tab-content active" id="calculator-tab">
-        <div class="content">
-            <div class="input-section">
-                <h2>📝 Input Details</h2>
-
-                <div class="input-group">
-                    <label>Currency</label>
-                    <select id="currency" onchange="updateCurrency()">
-                        <option value="INR">INR</option>
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                        <option value="GBP">GBP</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Offer Name</label>
-                    <input type="text" id="offer-name" placeholder="Company / Role">
-                </div>
-
-                <div class="input-group">
-                    <label>Annual CTC</label>
-                    <input type="number" id="ctc">
-                </div>
-
-                <div class="input-row">
+        <!-- Calculator Tab -->
+        <div class="tab-content active" id="calculator-tab">
+            <div class="content">
+                <div class="input-section">
+                    <h2>📝 Input Details</h2>
+                    
                     <div class="input-group">
-                        <label>Basic %</label>
-                        <input type="number" id="basic-percent" value="40">
+                        <label for="currency">Currency</label>
+                        <select id="currency" onchange="updateCurrency()">
+                            <option value="INR">🇮🇳 Indian Rupee (INR)</option>
+                            <option value="USD">🇺🇸 US Dollar (USD)</option>
+                            <option value="EUR">🇪🇺 Euro (EUR)</option>
+                            <option value="GBP">🇬🇧 British Pound (GBP)</option>
+                            <option value="AED">🇦🇪 UAE Dirham (AED)</option>
+                            <option value="SGD">🇸🇬 Singapore Dollar (SGD)</option>
+                        </select>
                     </div>
+
                     <div class="input-group">
-                        <label>HRA % of Basic</label>
-                        <input type="number" id="hra-percent" value="50">
+                        <label for="offer-name">Offer Name (Optional)</label>
+                        <input type="text" id="offer-name" placeholder="e.g., Company A - Software Engineer">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="ctc">Annual CTC 
+                            <span class="info-tooltip">?
+                                <span class="tooltip-text">Cost to Company - The total annual cost of employing you, including salary, benefits, and employer contributions.</span>
+                            </span>
+                        </label>
+                        <input type="number" id="ctc" placeholder="e.g., 1200000" min="0">
+                    </div>
+
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="basic-percent">Basic Salary (% of CTC) 
+                                <span class="info-tooltip">?
+                                    <span class="tooltip-text">The fixed component of your salary. Typically 40-50% of CTC. All other components are calculated based on this.</span>
+                                </span>
+                            </label>
+                            <input type="number" id="basic-percent" value="40" min="0" max="100">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="hra-percent">HRA (% of Basic) 
+                                <span class="info-tooltip">?
+                                    <span class="tooltip-text">House Rent Allowance - Usually 50% of basic salary. Partially tax-exempt if living in rented accommodation.</span>
+                                </span>
+                            </label>
+                            <input type="number" id="hra-percent" value="50" min="0" max="100">
+                        </div>
+                    </div>
+
+                    <div class="toggle-section">
+                        <div class="toggle-header" onclick="toggleSection('advanced')">
+                            <span>⚙️ Advanced Components</span>
+                            <span id="advanced-arrow">▼</span>
+                        </div>
+                        <div class="toggle-content" id="advanced">
+                            <div class="input-group">
+                                <label for="lta">LTA (Annual)</label>
+                                <input type="number" id="lta" value="0" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="medical">Medical Allowance (Annual)</label>
+                                <input type="number" id="medical" value="0" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="food">Food/Meal Allowance (Annual)</label>
+                                <input type="number" id="food" value="0" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="variable">Variable Pay (Annual)</label>
+                                <input type="number" id="variable" value="0" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="stocks">Stock Options/RSUs (Annual Value)</label>
+                                <input type="number" id="stocks" value="0" min="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-section">
+                        <div class="toggle-header" onclick="toggleSection('deductions')">
+                            <span>➖ Deductions</span>
+                            <span id="deductions-arrow">▼</span>
+                        </div>
+                        <div class="toggle-content" id="deductions">
+                            <div class="input-group">
+                                <label for="pf-percent">PF Employee (% of Basic)
+                                    <span class="info-tooltip">?
+                                        <span class="tooltip-text">Provident Fund - A retirement savings scheme. Both employee and employer contribute 12% of basic salary.</span>
+                                    </span>
+                                </label>
+                                <input type="number" id="pf-percent" value="12" min="0" max="100">
+                            </div>
+                            <div class="input-group">
+                                <label for="professional-tax">Professional Tax (Annual)
+                                    <span class="info-tooltip">?
+                                        <span class="tooltip-text">A state-level tax on professionals. Maximum ₹2,500/year in most states.</span>
+                                    </span>
+                                </label>
+                                <input type="number" id="professional-tax" value="2400" min="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-section">
+                        <div class="toggle-header" onclick="toggleSection('benefits')">
+                            <span>🎁 Other Benefits</span>
+                            <span id="benefits-arrow">▼</span>
+                        </div>
+                        <div class="toggle-content" id="benefits">
+                            <div class="input-group">
+                                <label for="bonus">Annual Bonus
+                                    <span class="info-tooltip">?
+                                        <span class="tooltip-text">Performance-based or annual bonus. Usually paid once or twice a year.</span>
+                                    </span>
+                                </label>
+                                <input type="number" id="bonus" value="0" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="joining-bonus">Joining/Signing Bonus</label>
+                                <input type="number" id="joining-bonus" value="0" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="relocation">Relocation Bonus</label>
+                                <input type="number" id="relocation" value="0" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="gratuity-percent">Gratuity (% of Basic)
+                                    <span class="info-tooltip">?
+                                        <span class="tooltip-text">A lump sum payment after 5+ years of service. Calculated as 4.81% of basic salary annually.</span>
+                                    </span>
+                                </label>
+                                <input type="number" id="gratuity-percent" value="4.81" min="0" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="calculate-btn" onclick="calculateSalary()">Calculate Complete Breakdown</button>
+                </div>
+
+                <div class="output-section">
+                    <h2>📊 Salary Breakdown</h2>
+                    <div id="output-content" class="empty-state">
+                        <p>Enter your CTC details and click Calculate to see the comprehensive breakdown</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tax Analysis Tab -->
+        <div class="tab-content" id="tax-tab">
+            <div style="padding: 20px; max-width: 1000px; margin: 0 auto;">
+                <h2 style="margin-bottom: 30px; color: #333;">💼 Income Tax Analysis</h2>
+                
+                <div class="tax-regime-selector">
+                    <div class="tax-regime-option selected" id="old-regime" onclick="selectTaxRegime('old')">
+                        <h3>Old Tax Regime</h3>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 10px;">With deductions & exemptions</p>
+                    </div>
+                    <div class="tax-regime-option" id="new-regime" onclick="selectTaxRegime('new')">
+                        <h3>New Tax Regime</h3>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 10px;">Lower rates, no deductions</p>
                     </div>
                 </div>
 
-                <button class="calculate-btn" onclick="calculateSalary()">Calculate</button>
-            </div>
-
-            <div class="output-section">
-                <h2>📊 Salary Breakdown</h2>
-                <div id="output-content" class="empty-state">
-                    Enter details and calculate
+                <div class="input-section" style="margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 20px;">Tax Saving Investments (Old Regime Only)</h3>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="tax-80c">80C Investments (Max 1.5L)</label>
+                            <input type="number" id="tax-80c" value="150000" min="0" max="150000">
+                        </div>
+                        <div class="input-group">
+                            <label for="tax-80d">80D Medical Insurance (Max 25K)</label>
+                            <input type="number" id="tax-80d" value="0" min="0" max="25000">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="tax-hra">HRA Exemption Claimed</label>
+                            <input type="number" id="tax-hra" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="tax-lta">LTA Exemption Claimed</label>
+                            <input type="number" id="tax-lta" value="0" min="0">
+                        </div>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateTax()">Calculate Tax</button>
                 </div>
+
+                <div id="tax-output"></div>
+            </div>
+        </div>
+
+        <!-- Comparison Tab -->
+        <div class="tab-content" id="comparison-tab">
+            <div style="padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h2 style="color: #333;">⚖️ Compare Job Offers</h2>
+                    <button class="btn btn-primary" onclick="clearComparisons()">Clear All</button>
+                </div>
+                <div id="comparison-content" class="comparison-grid"></div>
+            </div>
+        </div>
+
+        <!-- City Comparison Tab -->
+        <div class="tab-content" id="city-tab">
+            <div style="padding: 20px; max-width: 1200px; margin: 0 auto;">
+                <h2 style="margin-bottom: 30px; color: #333;">🏙️ Cost of Living Comparison</h2>
+                <div class="input-section" style="margin-bottom: 30px;">
+                    <p style="margin-bottom: 20px; color: #666;">See how your salary compares across different cities based on cost of living</p>
+                    <button class="calculate-btn" onclick="compareCities()">Compare Cities</button>
+                </div>
+                <div id="city-output"></div>
             </div>
         </div>
     </div>
 
-    <!-- Tax -->
-    <div class="tab-content" id="tax-tab">
-        <div class="input-section">
-            <h2>📊 Income Tax</h2>
-            <button class="calculate-btn" onclick="calculateTax()">Calculate Tax</button>
-            <div id="tax-output"></div>
+    <!-- Recommendations Modal -->
+    <div id="recommendations-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 style="color: #667eea; margin-bottom: 20px;">💡 Smart Salary Recommendations</h2>
+            <div id="recommendations-content"></div>
         </div>
     </div>
 
-    <!-- Comparison -->
-    <div class="tab-content" id="comparison-tab">
-        <div id="comparison-content" class="comparison-grid"></div>
-    </div>
-
-    <!-- City -->
-    <div class="tab-content" id="city-tab">
-        <button class="calculate-btn" onclick="compareCities()">Compare Cities</button>
-        <div id="city-output"></div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div id="recommendations-modal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>💡 Recommendations</h2>
-        <div id="recommendations-content"></div>
-    </div>
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

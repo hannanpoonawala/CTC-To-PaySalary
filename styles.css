@@ -540,6 +540,10 @@ body {
     color: #856404;
 }
 
+.recommendation-box p {
+    color: #856404;
+}
+
 .empty-state {
     text-align: center;
     padding: 60px 20px;
