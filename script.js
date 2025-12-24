@@ -101,7 +101,7 @@ function calculateSalary() {
     const totalDeductions = pfEmployee + professionalTax;
     const netSalaryAnnual = grossSalary - totalDeductions;
     const netSalaryMonthly = netSalaryAnnual / 12;
-    const inHandMonthly = (basic + hra + specialAllowance + lta/12 + medical/12 + food/12 + variable/12 - pfEmployee/12 - professionalTax/12);
+    const inHandMonthly = (basic + hra + specialAllowance + lta/12 + medical/12 + food/12 + variable/12 - pfEmployee/12 - professionalTax/12)/12;
 
     currentData = {
         ctc, basic, hra, specialAllowance, bonus, joiningBonus, relocation, gratuity,
